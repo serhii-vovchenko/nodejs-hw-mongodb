@@ -3,7 +3,6 @@ import pino from 'pino-http';
 import cors from 'cors';
 import env from './utils/env.js';
 import { getAllStudents, getStudentById } from './db/services/students.js';
-import mongoose from 'mongoose';
 
 const PORT = Number(env('PORT', '3000'));
 

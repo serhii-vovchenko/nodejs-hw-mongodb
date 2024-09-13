@@ -21,6 +21,3 @@ const initMongoConnection = async () => {
 };
 
 export default initMongoConnection;
-
-// `mongodb+srv://${user}:${password}@${url}/${db}?retryWrites=true&w=majority`
-// mongodb+srv://serhii_vovchenko:3Vkd3mwgxJN9dLhk@cluster0.tdao4.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0

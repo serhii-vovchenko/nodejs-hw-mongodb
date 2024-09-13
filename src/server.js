@@ -2,7 +2,7 @@ import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
 import env from './utils/env.js';
-import { getAllStudents, getStudentById } from './db/services/students.js';
+import { getAllStudents, getStudentById } from './services/students.js';
 
 const PORT = Number(env('PORT', '3000'));
 

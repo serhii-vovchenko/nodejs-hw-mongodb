@@ -2,7 +2,7 @@ import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
 import { env } from './utils/env.js';
-import { getAllStudents, getStudentById } from './services/students.js';
+import { getAllContacts, getContactById } from './services/contacts.js';
 
 const PORT = Number(env('PORT', '3000'));
 
@@ -26,24 +26,24 @@ const setupServer = () => {
     });
   });
 
-  app.get('/students', async (req, res) => {
-    const students = await getAllStudents();
+  app.get('/contacts', async (req, res) => {
+    const contacts = await getAllContacts();
 
     res.status(200).json({
       status: 200,
       message: 'Successfully found contacts!',
-      data: students,
+      data: contacts,
     });
   });
 
-  app.get('/students/:studentId', async (req, res, next) => {
-    const { studentId } = req.params;
+  app.get('/contacts/:contactId', async (req, res, next) => {
+    const { contactId } = req.params;
 
-    const student = await getStudentById(studentId);
+    const contact = await getContactById(contactId);
 
-    if (!student) {
+    if (!contact) {
       res.status(404).json({
-        message: 'Student not found',
+        message: 'Contact not found',
       });
       return;
     }
@@ -51,7 +51,7 @@ const setupServer = () => {
     res.status(200).json({
       status: 200,
       message: 'Successfully found contacts!',
-      data: student,
+      data: contact,
     });
   });
 

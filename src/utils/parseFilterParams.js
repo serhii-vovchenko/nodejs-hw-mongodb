@@ -12,6 +12,10 @@ const parseContactType = contactType => {
 };
 
 const parseBoolean = favourite => {
+  const isString = typeof contactType === 'string';
+
+  if (!isString) return;
+
   const favouriteToLowerCase = favourite.toLowerCase();
 
   if (favouriteToLowerCase === 'true') return true;

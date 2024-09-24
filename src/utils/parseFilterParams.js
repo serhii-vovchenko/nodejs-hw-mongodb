@@ -12,7 +12,7 @@ const parseContactType = contactType => {
 };
 
 const parseBoolean = favourite => {
-  const isString = typeof contactType === 'string';
+  const isString = typeof favourite === 'string';
 
   if (!isString) return;
 

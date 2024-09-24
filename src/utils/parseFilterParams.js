@@ -12,9 +12,11 @@ const parseContactType = contactType => {
 };
 
 const parseBoolean = favourite => {
-  if (favourite.toLowerCase() === 'true') return true;
+  const favouriteToLowerCase = favourite.toLowerCase();
 
-  if (favourite.toLowerCase() === 'false') return false;
+  if (favouriteToLowerCase === 'true') return true;
+
+  if (favouriteToLowerCase === 'false') return false;
 };
 
 export const parseFilterParams = query => {

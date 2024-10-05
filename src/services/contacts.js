@@ -7,17 +7,21 @@ export const getAllContacts = async ({
   sortOrder,
   sortBy,
   filter,
+  userId,
 }) => {
   const skip = (page - 1) * perPage;
 
-  const contactQuery = ContactsCollection.find();
+  const contactsQuery = ContactsCollection.find();
 
+  if (filter.userId) {
+    contactsQuery.where('userId').equals(filter.userId);
+  }
   if (filter.contactType) {
-    contactQuery.where('contactType').equals(filter.contactType);
+    contactsQuery.where('contactType').equals(filter.contactType);
   }
 
   if (filter.isFavourite) {
-    contactQuery.where('isFavourite').equals(filter.isFavourite);
+    contactsQuery.where('isFavourite').equals(filter.isFavourite);
   }
 
   // ======================================================================================
@@ -35,8 +39,8 @@ export const getAllContacts = async ({
   // Спрощення закоментованого коду
 
   const [contactCount, contacts] = await Promise.all([
-    ContactsCollection.find().merge(contactQuery).countDocuments(),
-    contactQuery
+    ContactsCollection.find(userId).merge(contactsQuery).countDocuments(),
+    contactsQuery
       .skip(skip)
       .limit(perPage)
       .sort({ [sortBy]: sortOrder })
@@ -53,8 +57,11 @@ export const getAllContacts = async ({
   };
 };
 
-export const getContactById = async contactId => {
-  const contact = await ContactsCollection.findById(contactId);
+export const getContactById = async (contactId, userId) => {
+  // const contact = await ContactsCollection.findById(contactId);
+
+  const contact = await ContactsCollection.findOne({ _id: contactId, userId });
+
   return contact;
 };
 
@@ -63,9 +70,14 @@ export const createContact = async payload => {
   return newContact;
 };
 
-export const updateContact = async (contactId, payload, options = {}) => {
+export const updateContact = async (
+  contactId,
+  userId,
+  payload,
+  options = {},
+) => {
   const contact = await ContactsCollection.findOneAndUpdate(
-    { _id: contactId },
+    { _id: contactId, userId },
     payload,
     {
       new: true,
@@ -79,9 +91,10 @@ export const updateContact = async (contactId, payload, options = {}) => {
   return contact;
 };
 
-export const deleteContact = async contactId => {
+export const deleteContact = async (contactId, userId) => {
   const delContact = await ContactsCollection.findOneAndDelete({
     _id: contactId,
+    userId,
   });
 
   return delContact;

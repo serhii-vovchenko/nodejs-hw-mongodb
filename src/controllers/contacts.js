@@ -56,7 +56,7 @@ export const getContactsByIdController = async (req, res, next) => {
 };
 
 export const createContactController = async (req, res, next) => {
-  const { name, phoneNumber, contactType } = req.body;
+  const { name, phoneNumber } = req.body;
   const { _id: userId } = req.user;
   const photo = req.file;
 
@@ -70,7 +70,7 @@ export const createContactController = async (req, res, next) => {
     }
   }
 
-  if ((!name, !phoneNumber, !contactType)) {
+  if ((!name, !phoneNumber)) {
     next(createHttpError(400, 'Mandatory fields are not filled'));
     return;
   }

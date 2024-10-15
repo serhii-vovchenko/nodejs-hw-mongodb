@@ -1,0 +1,44 @@
+type: object
+required:
+  - _id
+  - name
+  - phoneNumber
+  - email
+  - isFavourite
+  - contactType
+  - userId
+
+properties:
+  _id:
+    description: 'Contact id'
+    type: string
+    example: '6707b8bc91a12733fe3ecfa8'
+  name:
+    description: 'Contact name'
+    type: string
+    example: 'Brad Pitt'
+  phone:
+    description: 'Contact phoneNumber'
+    type: number
+    example: +380988899889
+  email:
+    description: 'Contact email'
+    type: string
+    example: 'bradpitt@ukr.net'
+  isFavourite:
+    description: 'Is Favourite'
+    type: boolean
+    example: true
+  contactType:
+    description: 'Contact type'
+    type: string
+    enum: ['work', 'home', 'personal']
+    default: 'personal'
+  userId:
+    description: 'User id who owns the contact'
+    type: string
+    example: '67065561e7fbb3672ecea352'
+  photo:
+    description: 'Link to photo'
+    type: string
+    example: 'https://res.cloudinary.com/dvvzu4dde/image/upload/v1728559442/wzb0ygwtumfpmztentxi.jpg'

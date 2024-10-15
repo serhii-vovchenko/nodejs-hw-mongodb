@@ -34,3 +34,5 @@ export const JWT_LIVE_TIME = 5 * 60;
 export const APP_DOMAIN = 'APP_DOMAIN';
 
 export const TEMPLATES_DIR = path.join(process.cwd(), 'src', 'templates');
+
+export const SWAGGER_PATH = path.join(process.cwd(), 'docs', 'swagger.json');

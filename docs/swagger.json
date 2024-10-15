@@ -1,0 +1,656 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "PhoneBook",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "description": "Efficiently manage your contacts with the PhoneBook app. Features include userregistration and authentication, as well as options for adding, editing, anddeleting contacts. Server-side storage ensures secure access across devices."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "paths": {
+    "/contacts": {
+      "get": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Get all contacts",
+        "operationId": "getAllContacts",
+        "description": "Get all contacts",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "description": "Page number",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          },
+          {
+            "in": "query",
+            "name": "perPage",
+            "required": false,
+            "description": "Number of contacts per page",
+            "schema": {
+              "type": "integer",
+              "example": 10
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortBy",
+            "required": false,
+            "description": "Sort By",
+            "schema": {
+              "type": "string",
+              "example": "name"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortOrder",
+            "required": false,
+            "description": "Sorting: ASC or DESC.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ASC",
+                "DESC"
+              ],
+              "example": "ASC"
+            }
+          },
+          {
+            "in": "query",
+            "name": "contactType",
+            "required": false,
+            "description": "Filter by work, home or personal.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "work",
+                "home",
+                "personal"
+              ],
+              "example": "personal"
+            }
+          },
+          {
+            "in": "query",
+            "name": "isFavourite",
+            "required": false,
+            "description": "Filter by favourite.",
+            "schema": {
+              "type": "boolean",
+              "example": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved contacts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully found contacts!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "contacts": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/contact"
+                          }
+                        },
+                        "totalCount": {
+                          "type": "integer",
+                          "example": 20
+                        },
+                        "currentPage": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "totalPages": {
+                          "type": "integer",
+                          "example": 10
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Create contact",
+        "operationId": "createContact",
+        "description": "Create new contact",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "description": "Contact name",
+                    "type": "string",
+                    "example": "Brad Pitt"
+                  },
+                  "phone": {
+                    "description": "Contact phoneNumber",
+                    "type": "number",
+                    "example": 380988899889
+                  },
+                  "email": {
+                    "description": "Contact email",
+                    "type": "string",
+                    "example": "bradpitt@ukr.net"
+                  },
+                  "isFavourite": {
+                    "description": "Is Favourite",
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "contactType": {
+                    "description": "Contact type",
+                    "type": "string",
+                    "enum": [
+                      "work",
+                      "home",
+                      "personal"
+                    ],
+                    "default": "personal"
+                  },
+                  "userId": {
+                    "description": "User id who owns the contact",
+                    "type": "string",
+                    "example": "67065561e7fbb3672ecea352"
+                  },
+                  "photo": {
+                    "description": "Link to photo",
+                    "type": "string",
+                    "example": "https://res.cloudinary.com/dvvzu4dde/image/upload/v1728559442/wzb0ygwtumfpmztentxi.jpg"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Contact created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 201
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Contact successfully created!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/contact"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      }
+    },
+    "/contacts/{id}": {
+      "get": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Get contact by id",
+        "operationId": "getContactById",
+        "description": "Get contact by id",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "67065561e7fbb3672ecea352"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get contact by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully found contact with id!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/contact"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Delete contact by id",
+        "operationId": "deleteContact",
+        "description": "Delete contact by id",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "67065561e7fbb3672ecea352"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Contact successfully deleted"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Update Contact by id",
+        "operationId": "updateContact",
+        "description": "Update contact",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "67065561e7fbb3672ecea352"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "description": "Contact name",
+                    "type": "string",
+                    "example": "Brad Pitt"
+                  },
+                  "phone": {
+                    "description": "Contact phoneNumber",
+                    "type": "number",
+                    "example": 380988899889
+                  },
+                  "email": {
+                    "description": "Contact email",
+                    "type": "string",
+                    "example": "bradpitt@ukr.net"
+                  },
+                  "isFavourite": {
+                    "description": "Is Favourite",
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "contactType": {
+                    "description": "Contact type",
+                    "type": "string",
+                    "enum": [
+                      "work",
+                      "home",
+                      "personal"
+                    ],
+                    "default": "personal"
+                  },
+                  "userId": {
+                    "description": "User id who owns the contact",
+                    "type": "string",
+                    "example": "67065561e7fbb3672ecea352"
+                  },
+                  "photo": {
+                    "description": "Link to photo",
+                    "type": "string",
+                    "example": "https://res.cloudinary.com/dvvzu4dde/image/upload/v1728559442/wzb0ygwtumfpmztentxi.jpg"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Update contact",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully patched a contact!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/contact"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "contact": {
+        "type": "object",
+        "required": [
+          "_id",
+          "name",
+          "phoneNumber",
+          "email",
+          "isFavourite",
+          "contactType",
+          "userId"
+        ],
+        "properties": {
+          "_id": {
+            "description": "Contact id",
+            "type": "string",
+            "example": "6707b8bc91a12733fe3ecfa8"
+          },
+          "name": {
+            "description": "Contact name",
+            "type": "string",
+            "example": "Brad Pitt"
+          },
+          "phone": {
+            "description": "Contact phoneNumber",
+            "type": "number",
+            "example": 380988899889
+          },
+          "email": {
+            "description": "Contact email",
+            "type": "string",
+            "example": "bradpitt@ukr.net"
+          },
+          "isFavourite": {
+            "description": "Is Favourite",
+            "type": "boolean",
+            "example": true
+          },
+          "contactType": {
+            "description": "Contact type",
+            "type": "string",
+            "enum": [
+              "work",
+              "home",
+              "personal"
+            ],
+            "default": "personal"
+          },
+          "userId": {
+            "description": "User id who owns the contact",
+            "type": "string",
+            "example": "67065561e7fbb3672ecea352"
+          },
+          "photo": {
+            "description": "Link to photo",
+            "type": "string",
+            "example": "https://res.cloudinary.com/dvvzu4dde/image/upload/v1728559442/wzb0ygwtumfpmztentxi.jpg"
+          }
+        }
+      }
+    },
+    "responses": {
+      "400": {
+        "description": "Bad request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "status",
+                "message",
+                "data"
+              ],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 400
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Bad request"
+                },
+                "data": {
+                  "type": "object",
+                  "required": [
+                    "message"
+                  ],
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Name is required"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "status",
+                "message",
+                "data"
+              ],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 401
+                },
+                "message": {
+                  "type": "string",
+                  "example": "UnauthorizedError"
+                },
+                "data": {
+                  "type": "object",
+                  "required": [
+                    "message"
+                  ],
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Access token expired"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Unauthorized error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "status",
+                "message",
+                "data"
+              ],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 404
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Not found"
+                },
+                "data": {
+                  "type": "object",
+                  "required": [
+                    "message"
+                  ],
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Contact not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

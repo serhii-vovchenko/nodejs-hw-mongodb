@@ -1,0 +1,32 @@
+openapi: 3.1.0
+info:
+  version: 1.0.0
+  title: PhoneBook
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  description:
+    Efficiently manage your contacts with the PhoneBook app. Features include
+    userregistration and authentication, as well as options for adding, editing,
+    anddeleting contacts. Server-side storage ensures secure access across
+    devices.
+servers:
+  - url: http://localhost:3000
+paths:
+  /contacts:
+    get:
+      $ref: ../swagger/paths/contacts/get.yaml
+    post:
+      $ref: ../swagger/paths/contacts/post.yaml
+  /contacts/{id}:
+    get:
+      $ref: ../swagger/paths/contacts/{id}/get.yaml
+    delete:
+      $ref: ../swagger/paths/contacts/{id}/delete.yaml
+    patch:
+      $ref: ../swagger/paths/contacts/{id}/patch.yaml
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
